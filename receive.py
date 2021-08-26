@@ -23,13 +23,15 @@ if __name__ == '__main__':
         default='config.yaml'
     )
     p.add_argument('--url', help='Specify chat URL', type=str)
-    p.add_argument('--port', help='Specify chat PORT', type=int)
+    p.add_argument('--receive_port', help='Specify chat PORT', type=int)
     p.add_argument('--history', help='Specify history filename', type=str)
+    p.add_argument('--send_port')
+    p.add_argument('--token')
 
     options = p.parse_args()
 
     chat_url = options.url
-    chat_port = options.port
+    chat_port = options.receive_port
 
     while True:
         asyncio.run(tcp_echo_client(chat_url, chat_port, options.history))

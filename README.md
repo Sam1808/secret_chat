@@ -12,7 +12,7 @@
 `pip install -r requirements.txt`
 3. Создайте конфигурационный файл `config.yaml` со следующим содержимым:
 ```buildoutcfg
-#congig.yaml
+#config.yaml
 
 # URL подпольного чата
 url: secret.url.org
