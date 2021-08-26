@@ -27,6 +27,7 @@ if __name__ == '__main__':
     p.add_argument('--history', help='Specify history filename', type=str)
     p.add_argument('--send_port')
     p.add_argument('--token')
+    p.add_argument('--debug')
 
     options = p.parse_args()
 
