@@ -1,10 +1,11 @@
 import asyncio
+import aiofiles
 import configargparse
 import logging
 import json
 
 
-async def tcp_echo_client(chat_url, chat_port, token, my_message: str):
+async def submit_message(chat_url, chat_port, token, my_message: str):
     reader, writer = await asyncio.open_connection(chat_url, chat_port)
     data = await reader.readline()
     logging.debug(data.decode())
@@ -17,6 +18,22 @@ async def tcp_echo_client(chat_url, chat_port, token, my_message: str):
     data = await reader.readline()
     logging.debug(data.decode())
     writer.close()
+
+
+async def register_user(chat_url, chat_port):
+    reader, writer = await asyncio.open_connection(chat_url, chat_port)
+    data = await reader.readline()
+    logging.debug(data.decode())
+    writer.write("\n".encode())
+    data = await reader.readline()
+    logging.debug(data.decode())
+    writer.write("\n".encode())
+    data = await reader.readline()
+    logging.debug(data.decode())
+    writer.close()
+
+    async with aiofiles.open('register_info.txt', mode='w') as file:
+        await file.write(data.decode())
 
 
 if __name__ == '__main__':
@@ -46,6 +63,6 @@ if __name__ == '__main__':
 
     message = '!Test.!Test.!Test.'
 
-    # while True:
-    asyncio.run(tcp_echo_client(chat_url, chat_port, chat_token, message))
+    # asyncio.run(submit_message(chat_url, chat_port, chat_token, message))
+    asyncio.run(register_user(chat_url, chat_port))
 
