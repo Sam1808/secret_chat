@@ -4,8 +4,8 @@ import configargparse
 import datetime
 
 
-async def tcp_echo_client(chat_url, chat_port, file_history):
-    reader, _ = await asyncio.open_connection(chat_url, chat_port)
+async def tcp_echo_client(chat_url, receive_port, file_history):
+    reader, _ = await asyncio.open_connection(chat_url, receive_port)
     now = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
     data = await reader.readline()
     message = f"[{now}] {data.decode()}"
@@ -14,7 +14,8 @@ async def tcp_echo_client(chat_url, chat_port, file_history):
     async with aiofiles.open(file_history, mode='a') as file:
         await file.write(message)
 
-if __name__ == '__main__':
+
+def get_arguments():
     p = configargparse.ArgParser()
     p.add_argument(
         '--my-config',
@@ -22,18 +23,24 @@ if __name__ == '__main__':
         help='Show my config file (default config.yaml)',
         default='config.yaml'
     )
-    p.add_argument('--url', help='Specify chat URL', type=str)
+    p.add_argument('--chat_url', help='Specify chat URL', type=str)
+    p.add_argument('--send_port', help='Specify chat PORT', type=int)
     p.add_argument('--receive_port', help='Specify chat PORT', type=int)
+    p.add_argument('--debug', help='Specify DEBUG mode', type=bool)
+    p.add_argument('--token', help='Specify your chat TOKEN', type=str)
     p.add_argument('--history', help='Specify history filename', type=str)
-    p.add_argument('--send_port')
-    p.add_argument('--token')
-    p.add_argument('--debug')
+    p.add_argument('--new_user', help='Register new user', type=bool)
+    return p
 
-    options = p.parse_args()
 
-    chat_url = options.url
-    chat_port = options.receive_port
+if __name__ == '__main__':
+
+    parser = get_arguments()
+    options = parser.parse_args()
+
+    chat_url = options.chat_url
+    receive_port = options.receive_port
 
     while True:
-        asyncio.run(tcp_echo_client(chat_url, chat_port, options.history))
+        asyncio.run(tcp_echo_client(chat_url, receive_port, options.history))
 

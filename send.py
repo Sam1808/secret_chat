@@ -1,27 +1,20 @@
 import asyncio
 import aiofiles
-import configargparse
 import logging
 import json
+import os
+from receive import get_arguments
 
 
-async def submit_message(chat_url, chat_port, token, my_message: str):
-    reader, writer = await asyncio.open_connection(chat_url, chat_port)
-    data = await reader.readline()
-    logging.debug(data.decode())
-    writer.write(f"{token}\n\n".encode())
-    data = await reader.readline()
-    if not json.loads(data.decode()):
-        logging.debug('Unknown Token. Please check it. ')
-    logging.debug(data.decode())
+async def submit_message(reader, writer, my_message: str):
     writer.write(f"{my_message}\n\n".encode())
     data = await reader.readline()
     logging.debug(data.decode())
     writer.close()
 
 
-async def register_user(chat_url, chat_port):
-    reader, writer = await asyncio.open_connection(chat_url, chat_port)
+async def register_user(chat_url, send_port):
+    reader, writer = await asyncio.open_connection(chat_url, send_port)
     data = await reader.readline()
     logging.debug(data.decode())
     writer.write("\n".encode())
@@ -36,33 +29,42 @@ async def register_user(chat_url, chat_port):
         await file.write(data.decode())
 
 
+async def authorise_user(chat_url, send_port, my_message):
+    async with aiofiles.open('register_info.txt', mode='r') as file:
+        register_info = await file.read()
+    register_info = json.loads(register_info)
+    reader, writer = await asyncio.open_connection(chat_url, send_port)
+    data = await reader.readline()
+    logging.debug(data.decode())
+    writer.write(f"{register_info['account_hash']}\n\n".encode())
+    data = await reader.readline()
+    if not json.loads(data.decode()):
+        logging.debug('Unknown Token. Please check it. ')
+    logging.debug(data.decode())
+
+    await submit_message(reader, writer, my_message)
+
+
+def add_arguments():
+    p = get_arguments()
+    p.add_argument('--my_message', help='Your message to chat', required=True, type=str)
+    return p
+
+
 if __name__ == '__main__':
-    p = configargparse.ArgParser()
-    p.add_argument(
-        '--my-config',
-        is_config_file=True,
-        help='Show my config file (default config.yaml)',
-        default='config.yaml'
-    )
-    p.add_argument('--url', help='Specify chat URL', type=str)
-    p.add_argument('--send_port', help='Specify chat PORT', type=int)
-    p.add_argument('--token', help='Specify your chat TOKEN', type=str)
-    p.add_argument('--receive_port', help='Specify chat PORT', type=int)
-    p.add_argument('--history', help='Specify history filename', type=str)
-    p.add_argument('--debug', help='Specify DEBUG mode', type=bool)
 
-    options = p.parse_args()
+    parser = add_arguments()
+    options = parser.parse_args()
 
-    chat_url = options.url
-    chat_port = options.send_port
-    chat_token = options.token
+    chat_url = options.chat_url
+    send_port = options.send_port
+    token = options.token
     debug = options.debug
+    my_message = options.my_message
 
     level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(level=level)
 
-    message = '!Test.!Test.!Test.'
-
-    # asyncio.run(submit_message(chat_url, chat_port, chat_token, message))
-    asyncio.run(register_user(chat_url, chat_port))
-
+    if options.new_user or not os.path.exists('register_info.txt'):
+        asyncio.run(register_user(chat_url, send_port))
+    asyncio.run(authorise_user(chat_url, send_port, my_message))
