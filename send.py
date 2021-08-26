@@ -13,13 +13,15 @@ async def submit_message(reader, writer, my_message: str):
     writer.close()
 
 
-async def register_user(chat_url, send_port):
+async def register_user(chat_url, send_port, my_name=False):
     reader, writer = await asyncio.open_connection(chat_url, send_port)
     data = await reader.readline()
     logging.debug(data.decode())
     writer.write("\n".encode())
     data = await reader.readline()
     logging.debug(data.decode())
+    if my_name:
+        writer.write(f"{my_name}\n".encode())
     writer.write("\n".encode())
     data = await reader.readline()
     logging.debug(data.decode())
@@ -68,10 +70,11 @@ if __name__ == '__main__':
     token = options.token
     debug = options.debug
     my_message = sanitize_text(options.my_message)
+    my_name = sanitize_text(options.my_name)
 
     level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(level=level)
 
     if options.new_user or not os.path.exists('register_info.txt'):
-        asyncio.run(register_user(chat_url, send_port))
+        asyncio.run(register_user(chat_url, send_port, my_name))
     asyncio.run(authorise_user(chat_url, send_port, my_message, token))

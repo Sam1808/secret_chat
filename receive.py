@@ -30,6 +30,7 @@ def get_arguments():
     p.add_argument('--token', help='Specify your chat TOKEN', type=str)
     p.add_argument('--history', help='Specify history filename', type=str)
     p.add_argument('--new_user', help='Register new user', type=bool)
+    p.add_argument('--my_name', help='Specify your name', type=str)
     return p
 
 
