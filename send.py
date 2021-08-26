@@ -29,14 +29,17 @@ async def register_user(chat_url, send_port):
         await file.write(data.decode())
 
 
-async def authorise_user(chat_url, send_port, my_message):
-    async with aiofiles.open('register_info.txt', mode='r') as file:
-        register_info = await file.read()
-    register_info = json.loads(register_info)
+async def authorise_user(chat_url, send_port, my_message, token=False):
+    if not token:
+        async with aiofiles.open('register_info.txt', mode='r') as file:
+            register_info = await file.read()
+        register_info = json.loads(register_info)
+        token = register_info['account_hash']
+    token = sanitize_text(token)
     reader, writer = await asyncio.open_connection(chat_url, send_port)
     data = await reader.readline()
     logging.debug(data.decode())
-    writer.write(f"{register_info['account_hash']}\n\n".encode())
+    writer.write(f"{token}\n\n".encode())
     data = await reader.readline()
     if not json.loads(data.decode()):
         logging.debug('Unknown Token. Please check it. ')
@@ -51,6 +54,10 @@ def add_arguments():
     return p
 
 
+def sanitize_text(text):
+    return text.encode('utf-8').replace(b'\n', b'').decode('utf-8')
+
+
 if __name__ == '__main__':
 
     parser = add_arguments()
@@ -60,11 +67,11 @@ if __name__ == '__main__':
     send_port = options.send_port
     token = options.token
     debug = options.debug
-    my_message = options.my_message
+    my_message = sanitize_text(options.my_message)
 
     level = logging.DEBUG if debug else logging.INFO
     logging.basicConfig(level=level)
 
     if options.new_user or not os.path.exists('register_info.txt'):
         asyncio.run(register_user(chat_url, send_port))
-    asyncio.run(authorise_user(chat_url, send_port, my_message))
+    asyncio.run(authorise_user(chat_url, send_port, my_message, token))
