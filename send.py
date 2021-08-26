@@ -1,6 +1,7 @@
 import asyncio
 import configargparse
 import logging
+import json
 
 
 async def tcp_echo_client(chat_url, chat_port, token, my_message: str):
@@ -9,6 +10,8 @@ async def tcp_echo_client(chat_url, chat_port, token, my_message: str):
     logging.debug(data.decode())
     writer.write(f"{token}\n\n".encode())
     data = await reader.readline()
+    if not json.loads(data.decode()):
+        logging.debug('Unknown Token. Please check it. ')
     logging.debug(data.decode())
     writer.write(f"{my_message}\n\n".encode())
     data = await reader.readline()
