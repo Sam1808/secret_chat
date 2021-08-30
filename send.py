@@ -45,7 +45,8 @@ async def authorise_user(chat_url, send_port, my_message, token=False):
     data = await reader.readline()
     if not json.loads(data.decode()):
         logging.debug('Unknown Token. Please check it. ')
-    logging.debug(data.decode())
+        writer.close()
+        return logging.debug(data.decode())
 
     await submit_message(reader, writer, my_message)
 

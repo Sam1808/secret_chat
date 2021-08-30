@@ -5,14 +5,18 @@ import datetime
 
 
 async def tcp_echo_client(chat_url, receive_port, file_history):
-    reader, _ = await asyncio.open_connection(chat_url, receive_port)
-    now = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
-    data = await reader.readline()
-    message = f"[{now}] {data.decode()}"
-    print(message.strip())
+    try:
+        reader, _ = await asyncio.open_connection(chat_url, receive_port, )
+        now = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
+        data = await reader.readline()
+        message = f"[{now}] {data.decode()}"
+        print(message.strip())
 
-    async with aiofiles.open(file_history, mode='a') as file:
-        await file.write(message)
+        async with aiofiles.open(file_history, mode='a') as file:
+            await file.write(message)
+
+    except Exception as err:
+        print(f'Error:{err}')
 
 
 def get_arguments():
@@ -44,4 +48,3 @@ if __name__ == '__main__':
 
     while True:
         asyncio.run(tcp_echo_client(chat_url, receive_port, options.history))
-
