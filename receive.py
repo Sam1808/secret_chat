@@ -22,9 +22,9 @@ async def tcp_echo_client(chat_url, receive_port, file_history):
 def get_arguments():
     p = configargparse.ArgParser()
     p.add_argument(
-        '--my-config',
+        '--config',
         is_config_file=True,
-        help='Show my config file (default config.yaml)',
+        help='Show config file (default config.yaml)',
         default='config.yaml'
     )
     p.add_argument('--chat_url', help='Specify chat URL', type=str)
@@ -34,7 +34,7 @@ def get_arguments():
     p.add_argument('--token', help='Specify your chat TOKEN', type=str)
     p.add_argument('--history', help='Specify history filename', type=str)
     p.add_argument('--new_user', help='Register new user', type=bool)
-    p.add_argument('--my_name', help='Specify your name', type=str)
+    p.add_argument('--name', help='Specify your name', type=str)
     return p
 
 
