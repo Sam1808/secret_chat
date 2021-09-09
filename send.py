@@ -52,6 +52,17 @@ async def authorise_user(chat_url, send_port, message, token=False):
 
 def add_arguments():
     arguments = get_arguments()
+    arguments.add_argument(
+        '--config',
+        is_config_file=True,
+        help='Show config file (default config.yaml)',
+        default='config.yaml'
+    )
+    arguments.add_argument('--send_port', help='Specify chat PORT', type=int)
+    arguments.add_argument('--token', help='Specify your chat TOKEN', type=str)
+    arguments.add_argument('--new_user', help='Register new user', type=bool)
+    arguments.add_argument('--name', help='Specify your name', type=str)
+    arguments.add_argument('--debug', help='Specify DEBUG mode (default FALSE)', type=bool)
     arguments.add_argument('--message', help='Your message to chat', required=True, type=str)
     return arguments
 
