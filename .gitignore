@@ -131,4 +131,3 @@ dmypy.json
 .idea
 chat_history.txt
 register_info.txt
-*.yaml
