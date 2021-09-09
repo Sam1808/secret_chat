@@ -1,8 +1,8 @@
 chat_url: minechat.dvmn.org
 receive_port: 5000
 send_port: 5050
-history: chat_history.txt
+history_filename: chat_history.txt
 token:
-debug: True
+debug:
 new_user:
 name:

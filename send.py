@@ -8,27 +8,27 @@ from receive import get_arguments
 
 async def submit_message(reader, writer, message: str):
     writer.write(f'{message}\n\n'.encode())
-    data = await reader.readline()
-    logging.debug(data.decode())
+    encoded_message = await reader.readline()
+    logging.debug(encoded_message.decode())
     writer.close()
 
 
 async def register_user(chat_url, send_port, name=None):
     reader, writer = await asyncio.open_connection(chat_url, send_port)
-    data = await reader.readline()
-    logging.debug(data.decode())
+    encoded_message = await reader.readline()
+    logging.debug(encoded_message.decode())
     writer.write('\n'.encode())
-    data = await reader.readline()
-    logging.debug(data.decode())
+    encoded_message = await reader.readline()
+    logging.debug(encoded_message.decode())
     if name:
         writer.write(f'{name}\n'.encode())
     writer.write('\n'.encode())
-    data = await reader.readline()
-    logging.debug(data.decode())
+    encoded_message = await reader.readline()
+    logging.debug(encoded_message.decode())
     writer.close()
 
     async with aiofiles.open('register_info.txt', mode='w') as file:
-        await file.write(data.decode())
+        await file.write(encoded_message.decode())
 
 
 async def authorise_user(chat_url, send_port, message, token=False):
@@ -38,22 +38,22 @@ async def authorise_user(chat_url, send_port, message, token=False):
         register_info = json.loads(register_raw_data)
         token = register_info['account_hash']
     reader, writer = await asyncio.open_connection(chat_url, send_port)
-    data = await reader.readline()
-    logging.debug(data.decode())
+    encoded_message = await reader.readline()
+    logging.debug(encoded_message.decode())
     writer.write(f'{token}\n\n'.encode())
-    data = await reader.readline()
-    if not json.loads(data.decode()):
+    encoded_message = await reader.readline()
+    if not json.loads(encoded_message.decode()):
         logging.debug('Unknown Token. Please check it. ')
         writer.close()
-        return logging.debug(data.decode())
+        return logging.debug(encoded_message.decode())
 
     await submit_message(reader, writer, message)
 
 
 def add_arguments():
-    p = get_arguments()
-    p.add_argument('--message', help='Your message to chat', required=True, type=str)
-    return p
+    arguments = get_arguments()
+    arguments.add_argument('--message', help='Your message to chat', required=True, type=str)
+    return arguments
 
 
 def sanitize_text(text):
