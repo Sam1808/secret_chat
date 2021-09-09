@@ -7,9 +7,9 @@ import datetime
 async def fetch_chat_messages(chat_url, receive_port, file_history):
     try:
         reader, _ = await asyncio.open_connection(chat_url, receive_port, )
-        now = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
+        now = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
         data = await reader.readline()
-        message = f"[{now}] {data.decode()}"
+        message = f'[{now}] {data.decode()}'
         print(message.strip())
 
         async with aiofiles.open(file_history, mode='a') as file:
