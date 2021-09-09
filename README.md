@@ -6,10 +6,14 @@
 
 Делаем всё под python 3.7 и выше.
 
-1. Скачайте код:  
-   `git clone https://github.com/Sam1808/secret_chat.git`
+1. Скачайте код:
+   ```bash
+   git clone https://github.com/Sam1808/secret_chat.git`
+   ```
 2. Разверните [виртуальное окружение](https://devman.org/encyclopedia/pip/pip_virtualenv/) и зависимости:  
-   `pip install -r requirements.txt`
+   ```bash
+    pip install -r requirements.txt
+   ```
 3. Создайте конфигурационный файл `config.yaml` со следующим содержимым:
 
 ```buildoutcfg
@@ -30,7 +34,7 @@ debug:
 # Зарегистриовать ли нового пользователя? (пустое значение - нет)
 new_user:
 # Указать свое имя пользователя в чате
-my_name:
+name:
 ```
 
 *На самом деле имя конфигурационного файла не имеет значения. Подробнее ниже.*
@@ -38,11 +42,17 @@ my_name:
 ### Как *бабе Зине* запустить скрипт для чтения чата:
 
 - если вся конфигурация описана в файле `config.yaml`  
-  `python3 receive.py`
-- если вся конфигурация описана в файле `my_name_config_file.yaml`  
-  `python3 receive.py --my-config my_name_config_file.yaml`
+  ```python
+   python3 receive.py
+  ```
+- если вся конфигурация описана в файле `name_of_config_file.yaml`  
+  ```python
+    python3 receive.py --config name_of_config_file.yaml
+  ```
 - если вся конфигурация описана, но очень хочется детализировать переменные  
-  `python3 receive.py --url new.secret.url --port 9999 --history new_file.txt`
+  ```python
+    python3 receive.py --url new.secret.url --port 9999 --history new_file.txt
+  ```
 
 ### Что увидит *баба Зина*:
 
@@ -52,19 +62,29 @@ my_name:
 ### Как *бабе Зине* запустить скрипт для отправки сообщения в чат:
 
 Отправка сообщений с помощью скрипта `send.py`. Отправка чуть сложнее, чем прием, тут появляется
-обязательный аргумент командной строки `--my_message`, иначе что вы собрались отправлять. Итак...  
+обязательный аргумент командной строки `--message`, иначе что вы собрались отправлять. Итак...  
 - если вы отправляете сообщение впервые и у вас нет никаких регистрационных данных, скрипт
-автоматически все сделает за вас и сохранит чуствительные данные в `register_info.txt`. Т.об.  
-`python3 send.py --my_message 'Hello my friendsss!'`
+автоматически все сделает за вас и сохранит чуствительные данные в `register_info.txt`. Т.об.
+```python
+python3 send.py --message 'Hello my friends!'
+```
 - далее скрипт всегда будет отправлять данные от имени зарегистированного пользователя, пока вы 
 не удалите `register_info.txt` или явно не укажите `token` другого пользователя, например:  
-`python3 send.py --my_message 'Hello my friendsss!' --token 11223344ldfssdfsdfsd`
+```python
+python3 send.py --message 'Hello my friends!' --token 11223344ldfssdfsdfsd
+```
 - если имя пользоватея вам надоело, перерегистрируйтесь:  
-`python3 send.py --my_message 'Hello my friendsss!' --new_user=True`
+```python
+python3 send.py --message 'Hello my friends!' --new_user=True
+```
 - если хотите подробно видеть в консоли все происходящее, включите DEBUG:  
-`python3 send.py --my_message 'Hello my friendsss!' --debug=True`
+```python
+python3 send.py --message 'Hello my friends!' --debug=True
+```
 - а ещё можно явно указать свое имя пользователя, хотя в чате оно будет не особо явное  
-`python3 send.py --my_message 'Hello my friendsss!' --my_name Zina_super_baba`
+```python
+python3 send.py --message 'Hello my friends!' --name Zina_super_baba
+```
 
 Все указанные опции можно прописать на постоянной основе в `config.yaml`
 ### Ошибки:
