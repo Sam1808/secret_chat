@@ -7,16 +7,16 @@
 Делаем всё под python 3.7 и выше.
 
 1. Скачайте код:
-   ```bash
-   git clone https://github.com/Sam1808/secret_chat.git`
-   ```
+```shell
+git clone https://github.com/Sam1808/secret_chat.git
+```
 2. Разверните [виртуальное окружение](https://devman.org/encyclopedia/pip/pip_virtualenv/) и зависимости:  
-   ```bash
-    pip install -r requirements.txt
-   ```
+```shell
+pip install -r requirements.txt
+```
 3. Создайте конфигурационный файл `config.yaml` со следующим содержимым:
 
-```buildoutcfg
+```yaml
 #config.yaml
 
 # URL подпольного чата
@@ -42,17 +42,17 @@ name:
 ### Как *бабе Зине* запустить скрипт для чтения чата:
 
 - если вся конфигурация описана в файле `config.yaml`  
-  ```python
-   python3 receive.py
-  ```
+```python
+python3 receive.py
+```
 - если вся конфигурация описана в файле `name_of_config_file.yaml`  
-  ```python
-    python3 receive.py --config name_of_config_file.yaml
-  ```
+```python
+python3 receive.py --config name_of_config_file.yaml
+```
 - если вся конфигурация описана, но очень хочется детализировать переменные  
-  ```python
-    python3 receive.py --url new.secret.url --port 9999 --history new_file.txt
-  ```
+```python
+python3 receive.py --url new.secret.url --port 9999 --history new_file.txt
+```
 
 ### Что увидит *баба Зина*:
 
@@ -91,4 +91,4 @@ python3 send.py --message 'Hello my friends!' --name Zina_super_baba
 
 - скрипт будет отказываться запускаться, пока вы не создадите файл конфигурации.
 - а ещё он потребует сообщение при отправке
-- скрипт не ломается, если символы переноса строки `\n` попали в токен, имя пользователя, или в текст сообщения
+- скрипт не ломается, если символы переноса строки `\n` попали, имя пользователя, или в текст сообщения
