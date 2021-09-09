@@ -34,8 +34,8 @@ async def register_user(chat_url, send_port, name=None):
 async def authorise_user(chat_url, send_port, message, token=False):
     if not token:
         async with aiofiles.open('register_info.txt', mode='r') as file:
-            register_info = await file.read()
-        register_info = json.loads(register_info)
+            register_raw_data = await file.read()
+        register_info = json.loads(register_raw_data)
         token = register_info['account_hash']
     reader, writer = await asyncio.open_connection(chat_url, send_port)
     data = await reader.readline()
