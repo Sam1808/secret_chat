@@ -4,7 +4,7 @@ import configargparse
 import datetime
 
 
-async def tcp_echo_client(chat_url, receive_port, file_history):
+async def fetch_chat_messages(chat_url, receive_port, file_history):
     try:
         reader, _ = await asyncio.open_connection(chat_url, receive_port, )
         now = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
@@ -47,4 +47,4 @@ if __name__ == '__main__':
     receive_port = options.receive_port
 
     while True:
-        asyncio.run(tcp_echo_client(chat_url, receive_port, options.history))
+        asyncio.run(fetch_chat_messages(chat_url, receive_port, options.history))

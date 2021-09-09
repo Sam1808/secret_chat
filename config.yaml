@@ -5,4 +5,4 @@ history: chat_history.txt
 token:
 debug: True
 new_user:
-my_name:
+name:
