@@ -22,9 +22,24 @@ async def fetch_chat_messages(chat_url, receive_port, history_filename):
 
 def get_arguments():
     arguments = configargparse.ArgParser()
-    arguments.add_argument('--chat_url', help='Specify chat URL (default minechat.dvmn.org)', type=str, default='minechat.dvmn.org')
-    arguments.add_argument('--receive_port', help='Specify chat PORT (default 5000)', type=int, default=5000)
-    arguments.add_argument('--history_filename', help='Specify history filename (default chat_history.txt)', type=str, default='chat_history.txt')
+    arguments.add_argument(
+        '--chat_url',
+        help='Specify chat URL (default minechat.dvmn.org)',
+        type=str,
+        default='minechat.dvmn.org'
+    )
+    arguments.add_argument(
+        '--receive_port',
+        help='Specify chat PORT (default 5000)',
+        type=int,
+        default=5000
+    )
+    arguments.add_argument(
+        '--history_filename',
+        help='Specify history filename (default chat_history.txt)',
+        type=str,
+        default='chat_history.txt'
+    )
     return arguments
 
 
@@ -36,4 +51,6 @@ if __name__ == '__main__':
     chat_url = options.chat_url
     receive_port = options.receive_port
 
-    asyncio.run(fetch_chat_messages(chat_url, receive_port, options.history_filename))
+    asyncio.run(
+        fetch_chat_messages(chat_url, receive_port, options.history_filename)
+    )

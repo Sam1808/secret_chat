@@ -68,7 +68,12 @@ def add_arguments():
     arguments.add_argument('--new_user', help='Register new user', type=bool)
     arguments.add_argument('--name', help='Specify your name', type=str)
     arguments.add_argument('--debug', help='Specify DEBUG mode', type=bool)
-    arguments.add_argument('--message', help='Your message to chat', required=True, type=str)
+    arguments.add_argument(
+        '--message',
+        help='Your message to chat',
+        required=True,
+        type=str,
+    )
     return arguments
 
 

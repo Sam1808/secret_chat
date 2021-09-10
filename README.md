@@ -18,7 +18,8 @@ pip install -r requirements.txt
 
 ```yaml
 #config.yaml
-
+# URL подпольного чата 
+chat_url: minechat.dvmn.org
 # Порт для отправки сообщений в тот самый подпольный чат
 send_port: 0000
 # Токен пользователя, если он у вас есть
