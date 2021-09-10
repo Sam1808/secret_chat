@@ -7,7 +7,7 @@ from receive import get_arguments
 
 
 async def submit_message(reader, writer, message: str):
-    writer.write(f'{message}\n\n'.encode())
+    await send_symbols(writer, f'{message}\n\n')
     encoded_message = await reader.readline()
     logging.debug(encoded_message.decode())
     writer.close()
@@ -17,12 +17,12 @@ async def register_user(chat_url, send_port, name=None):
     reader, writer = await asyncio.open_connection(chat_url, send_port)
     encoded_message = await reader.readline()
     logging.debug(encoded_message.decode())
-    writer.write('\n'.encode())
+    await send_symbols(writer, '\n')
     encoded_message = await reader.readline()
     logging.debug(encoded_message.decode())
     if name:
-        writer.write(f'{name}\n'.encode())
-    writer.write('\n'.encode())
+        await send_symbols(writer, f'{name}\n')
+    await send_symbols(writer, '\n')
     encoded_message = await reader.readline()
     logging.debug(encoded_message.decode())
     writer.close()
@@ -31,7 +31,7 @@ async def register_user(chat_url, send_port, name=None):
         await file.write(encoded_message.decode())
 
 
-async def authorise_user(chat_url, send_port, message, token=False):
+async def authorise_user(chat_url, send_port, message, token=None):
     if not token:
         async with aiofiles.open('register_info.txt', mode='r') as file:
             register_raw_data = await file.read()
@@ -40,7 +40,7 @@ async def authorise_user(chat_url, send_port, message, token=False):
     reader, writer = await asyncio.open_connection(chat_url, send_port)
     encoded_message = await reader.readline()
     logging.debug(encoded_message.decode())
-    writer.write(f'{token}\n\n'.encode())
+    await send_symbols(writer, f'{token}\n\n')
     encoded_message = await reader.readline()
     if not json.loads(encoded_message.decode()):
         logging.debug('Unknown Token. Please check it. ')
@@ -48,6 +48,11 @@ async def authorise_user(chat_url, send_port, message, token=False):
         return logging.debug(encoded_message.decode())
 
     await submit_message(reader, writer, message)
+
+
+async def send_symbols(writer, symbols):
+    writer.write(symbols.encode())
+    await writer.drain()
 
 
 def add_arguments():
@@ -62,7 +67,7 @@ def add_arguments():
     arguments.add_argument('--token', help='Specify your chat TOKEN', type=str)
     arguments.add_argument('--new_user', help='Register new user', type=bool)
     arguments.add_argument('--name', help='Specify your name', type=str)
-    arguments.add_argument('--debug', help='Specify DEBUG mode (default FALSE)', type=bool)
+    arguments.add_argument('--debug', help='Specify DEBUG mode', type=bool)
     arguments.add_argument('--message', help='Your message to chat', required=True, type=str)
     return arguments
 

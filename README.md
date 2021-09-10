@@ -81,7 +81,9 @@ python3 send.py --message 'Hello my friends!' --new_user=True
 ```python
 python3 send.py --message 'Hello my friends!' --debug=True
 ```
-- а ещё можно явно указать свое имя пользователя, хотя в чате оно будет не особо явное  
+- а ещё можно явно зарегистировать свое имя пользователя, хотя в чате оно будет не особо явное. 
+Не забудьте удалить старые регистрационные данные (файл `register_info.txt`) перед регистрацией такого пользователя. 
+Считаете, что это достойно автоматизации? Скажите об этом!
 ```python
 python3 send.py --message 'Hello my friends!' --name Zina_super_baba
 ```
